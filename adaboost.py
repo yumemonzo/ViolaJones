@@ -232,14 +232,14 @@ class AdaBoost:
     def save(self, file_path):
         with open(file_path, 'wb') as f:
             pickle.dump(self, f)
-        logging.info(f'모델이 {file_path}에 저장되었습니다.')
+        logging.info(f'[Save] 모델이 {file_path}에 저장되었습니다.')
         logging.info(f"-----------------------------------------------------------------------------------------------")
     
     @classmethod
     def load(cls, file_path):
         with open(file_path, 'rb') as f:
             model = pickle.load(f)
-        logging.info(f'성공적으로 {file_path}로부터 모델을 불러왔습니다.')
+        logging.info(f'[Loaded] 성공적으로 {file_path}로부터 모델을 불러왔습니다.')
         logging.info(f"-----------------------------------------------------------------------------------------------")
         
         return model
