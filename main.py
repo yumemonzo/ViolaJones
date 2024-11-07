@@ -19,6 +19,7 @@ def get_args():
     parser.add_argument('--test_background_images_dir', type=str, default="/workspace/ViolaJones/data/test/backgrounds")
     parser.add_argument('--save_dir', type=str, default="/workspace/ViolaJones/result")
     parser.add_argument('--adaboost_path', type=str)
+    parser.add_argument('--test_images_dir', type=str, default="/workspace/ViolaJones/data/test_faces")
 
     return parser.parse_args()
 
@@ -87,10 +88,10 @@ def main():
         adaboost.load(args.adaboost_path)
     #######################################################################################################
     if args.vis:
-        file_names = os.listdir("/workspace/data/celebA/test_faces")
+        file_names = os.listdir(args.test_images_dir)
         logging.info(f"[Generated] Start visualization")
         with ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
-            futures = [executor.submit(process_image, file_name, "/workspace/data/celebA/test_faces", save_dir, adaboost) for file_name in file_names]
+            futures = [executor.submit(process_image, file_name, args.test_images_dir, save_dir, adaboost) for file_name in file_names]
             for future in futures:
                 future.result()
         logging.info(f"[Generated] Finish visualization")
