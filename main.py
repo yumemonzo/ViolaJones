@@ -12,6 +12,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--layers', type=str,required=True)
     parser.add_argument('--train', action='store_true', help="Train mode enabled")
+    parser.add_argument('--vis', action='store_true', help="Visualization enabled")
     parser.add_argument('--train_face_images_dir', type=str, default="/workspace/ViolaJones/data/train/faces")
     parser.add_argument('--train_background_images_dir', type=str, default="/workspace/ViolaJones/data/train/backgrounds")
     parser.add_argument('--test_face_images_dir', type=str, default="/workspace/ViolaJones/data/test/faces")
@@ -30,6 +31,7 @@ def main():
     #######################################################################################################
     logging.basicConfig(filename=os.path.join(save_dir, 'output_log.txt'), level=logging.INFO, format='%(message)s')
     start_time = get_korea_time()
+    logging.info(f"-----------------------------------------------------------------------------------------------")
     logging.info(f"Start time: {start_time}")
     logging.info(f"-----------------------------------------------------------------------------------------------")
     #######################################################################################################
@@ -84,14 +86,15 @@ def main():
     else:
         adaboost.load(args.adaboost_path)
     #######################################################################################################
-    file_names = os.listdir("/workspace/data/celebA/test_faces")
-    logging.info(f"[Generated] Start visualization")
-    with ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
-        futures = [executor.submit(process_image, file_name, "/workspace/data/celebA/test_faces", save_dir, adaboost) for file_name in file_names]
-        for future in futures:
-            future.result()
-    logging.info(f"[Generated] Finish visualization")
-    logging.info(f"-----------------------------------------------------------------------------------------------")
+    if args.vis:
+        file_names = os.listdir("/workspace/data/celebA/test_faces")
+        logging.info(f"[Generated] Start visualization")
+        with ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
+            futures = [executor.submit(process_image, file_name, "/workspace/data/celebA/test_faces", save_dir, adaboost) for file_name in file_names]
+            for future in futures:
+                future.result()
+        logging.info(f"[Generated] Finish visualization")
+        logging.info(f"-----------------------------------------------------------------------------------------------")
     #######################################################################################################
 
 if __name__ == "__main__":
